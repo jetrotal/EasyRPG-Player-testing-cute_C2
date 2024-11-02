@@ -28,12 +28,35 @@
 #include <lcf/rpg/savemapeventbase.h>
 #include "drawable.h"
 #include "utils.h"
+#include "cute_c2.h"
 
 /**
  * Game_Character class.
  */
 class Game_Character {
 public:
+
+	//TODO - PIXELMOVE
+	float real_x; 
+	float real_y;
+
+	float target_x;
+	float target_y;
+	c2v move_direction;
+	bool forced_skip = false; //When a movement is not skippable, but it is forced to be skiped.
+	bool is_moving_toward_target = false;
+	bool is_move_toward_target_skippable = false;
+
+	bool MoveVector(c2v vector);
+	bool MoveVector(float vx, float vy);
+
+	void SetMoveTowardTarget(c2v position, bool skippable);
+	void SetMoveTowardTarget(float x, float y, bool skippable);
+	bool UpdateMoveTowardTarget();
+
+	float GetStepSize() const;
+	//
+
 	using AnimType = lcf::rpg::EventPage::AnimType;
 
 	enum Type {
@@ -851,6 +874,8 @@ public:
 		UpLeft
 	};
 
+	float Epsilon = pow(256, -2);
+
 	static bool IsDirectionDiagonal(int d);
 
 	/** Reverses a direction, ex: ReverseDir(Up) == Down. */
@@ -930,6 +955,12 @@ inline const lcf::rpg::SaveMapEventBase* Game_Character::data() const {
 inline Game_Character::Type Game_Character::GetType() const {
 	return _type;
 }
+
+//PIXELMOVE
+inline float Game_Character::GetStepSize() const {
+	return (float)(1 << (1 + GetMoveSpeed())) / 256.0; // SCREEN_TILE_SIZE == 265
+}
+//
 
 inline int Game_Character::GetX() const {
 	return data()->position_x;

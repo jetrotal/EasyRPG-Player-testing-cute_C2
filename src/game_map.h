@@ -76,15 +76,13 @@ class MapUpdateAsyncContext {
  * Game_Map namespace
  */
 namespace Game_Map {
+
+	bool WouldCollideWithCharacter(const Game_Character& self, const Game_Character& other, bool self_conflict); //PIXELMOVE
+
 	/**
 	 * Initialize Game_Map.
 	 */
 	void Init();
-
-	/**
-	 * Initialized Common Events.
-	 */
-	void InitCommonEvents();
 
 	/**
 	 * Quits (frees) Game_Map.

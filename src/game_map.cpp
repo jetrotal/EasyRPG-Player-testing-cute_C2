@@ -108,20 +108,16 @@ void Game_Map::Init() {
 
 	interpreter.reset(new Game_Interpreter_Map(true));
 
-	InitCommonEvents();
-
-	vehicles.clear();
-	vehicles.emplace_back(Game_Vehicle::Boat);
-	vehicles.emplace_back(Game_Vehicle::Ship);
-	vehicles.emplace_back(Game_Vehicle::Airship);
-}
-
-void Game_Map::InitCommonEvents() {
 	common_events.clear();
 	common_events.reserve(lcf::Data::commonevents.size());
 	for (const lcf::rpg::CommonEvent& ev : lcf::Data::commonevents) {
 		common_events.emplace_back(ev.ID);
 	}
+
+	vehicles.clear();
+	vehicles.emplace_back(Game_Vehicle::Boat);
+	vehicles.emplace_back(Game_Vehicle::Ship);
+	vehicles.emplace_back(Game_Vehicle::Airship);
 }
 
 void Game_Map::Dispose() {
@@ -232,8 +228,6 @@ void Game_Map::SetupFromSave(
 
 	const bool is_db_save_compat = Main_Data::game_player->IsDatabaseCompatibleWithSave(lcf::Data::system.save_count);
 	const bool is_map_save_compat = Main_Data::game_player->IsMapCompatibleWithSave(GetMapSaveCount());
-
-	InitCommonEvents();
 
 	if (is_db_save_compat && is_map_save_compat) {
 		for (size_t i = 0; i < std::min(save_ce.size(), common_events.size()); ++i) {
@@ -357,7 +351,11 @@ void Game_Map::SetupCommon() {
 	// Otherwise new strings are not applied
 	if (translation_changed) {
 		translation_changed = false;
-		InitCommonEvents();
+		common_events.clear();
+		common_events.reserve(lcf::Data::commonevents.size());
+		for (const lcf::rpg::CommonEvent& ev : lcf::Data::commonevents) {
+			common_events.emplace_back(ev.ID);
+		}
 	}
 
 	// Create the map events
@@ -527,6 +525,13 @@ static bool WouldCollide(const Game_Character& self, const Game_Character& other
 	}
 
 	return false;
+}
+
+bool Game_Map::WouldCollideWithCharacter(const Game_Character& self, const Game_Character& other, bool self_conflict) { //PIXELMOVE
+	if (&self == &other) {
+		return false;
+	}
+	return WouldCollide(self, other, self_conflict);
 }
 
 template <typename T>

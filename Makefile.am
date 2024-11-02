@@ -59,6 +59,7 @@ libeasyrpg_player_a_SOURCES = \
 	src/color.h \
 	src/compiler.h \
 	src/config_param.h \
+	src/cute_c2.h \
 	src/decoder_fluidsynth.cpp \
 	src/decoder_fluidsynth.h \
 	src/decoder_fmmidi.cpp \

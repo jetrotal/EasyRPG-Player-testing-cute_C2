@@ -66,6 +66,11 @@ Game_Vehicle::Game_Vehicle(Type type)
 			SetMoveSpeed(lcf::rpg::EventPage::MoveSpeed_double);
 			break;
 	}
+
+	if (true) { //TODO - PIXELMOVE
+		real_x = (float)GetX();
+		real_y = (float)GetY();
+	}
 }
 
 void Game_Vehicle::SetSaveData(lcf::rpg::SaveVehicleLocation save) {
@@ -129,6 +134,11 @@ void Game_Vehicle::SyncWithRider(const Game_Character* rider) {
 	SetDirection(rider->GetDirection());
 	SetFacing(rider->GetFacing());
 	SetRemainingStep(rider->GetRemainingStep());
+
+	if (true) { //TODO - PIXELMOVE
+		real_x = rider->real_x;
+		real_y = rider->real_y;
+	}
 
 	// RPG_RT doesn't copy jumping chunks
 
